@@ -6,7 +6,7 @@ class Buscaminas:
 
         for i in range(f):
             self.tablero[i] = [0]*c
-            self.tablero_usuario[i] = [0] *c
+            self.tablero_usuario[i] = ["_"] *c
     
     def colocarMinas(self, minas):
         while(minas >0):
@@ -33,6 +33,30 @@ class Buscaminas:
                         contador +=1
 
 
+    def colocar_pieza(self , f , c , pierde = True ):
+        filas = [0,0,-1,1,1,1,-1,-1] # esto va a servir para recorer el arreglo y poder moverme dentro del mismo
+        cols =  [1,-1,0,0,1,-1,1,-1] # cada combinacion de fila y columna es un movimiento espefico
+        if(f>=0 and len(self.tablero) and c >=0 and c< len(self.tablero[f])):
+
+            if(self.tablero_usuario[f][c] =="_" and self.tablero[f][c]==0):
+                #caso recursivo
+                self.tablero_usuario[f][c] =str(self.tablero[f][c])
+                contador = 0
+
+                while(contador<8):
+                    nueva_fila = f + filas[contador]
+                    nueva_columna = c + cols[contador]
+                    pierde = self.colocar_pieza(nueva_fila,nueva_columna,False)
+                    contador += 1
+
+            elif(self.tablero[f][c]>0):
+                self.tablero_usuario[f][c] =str(self.tablero[f][c])
+                pierde = False
+            
+            else:
+                 self.tablero_usuario[f][c] =str(self.tablero[f][c])
+            
+        return pierde
 
 
 
@@ -47,13 +71,28 @@ class Buscaminas:
                 else:
                     contenido += str(self.tablero[f][c]) + "\t"
             contenido += "\n"
+        
+
+
+        contenido += " -- tablero usuario \n"
+        for f in range(len(self.tablero_usuario)):
+            for c in range(len(self.tablero_usuario[f])):
+                    contenido += str(self.tablero_usuario[f][c]) + "\t"
+            contenido += "\n"
+
+
+    
         return contenido
+
+
             
 
 if __name__ == "__main__":
     buscaminas = Buscaminas(5,6)
     print(buscaminas)
-    buscaminas.colocarMinas(10)
+    buscaminas.colocarMinas(3)
     print(buscaminas)
     buscaminas.colocar_numeros()
+    print(buscaminas)
+    buscaminas.colocar_pieza(0,0)
     print(buscaminas)
